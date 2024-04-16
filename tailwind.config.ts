@@ -15,6 +15,15 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function({ addUtilities }: { addUtilities: any }) {
+      const newUtilities = {
+        '.grid-cols-custom': {
+          gridTemplateColumns: '1fr 1fr',
+        },
+      }
+      addUtilities(newUtilities)
+    }
+  ],
 };
 export default config;
