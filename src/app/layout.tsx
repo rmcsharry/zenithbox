@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from '@/components/Navbar';
 import ReactQueryClientProvider from '@/utils/QueryClientProvider';
 import { cn } from '@/lib/utils';
 import { Inter as FontSans } from "next/font/google"
+import { Toaster } from "@/components/ui/sonner"
 
 export const metadata: Metadata = {
   title: "ZenithBox IDE",
@@ -29,7 +29,10 @@ export default function RootLayout({
         )}>
       <Navbar />
         <ReactQueryClientProvider>
-          {children}
+          <main>
+            {children}
+          </main>
+          <Toaster />
         </ReactQueryClientProvider>
       </body>
     </html>
