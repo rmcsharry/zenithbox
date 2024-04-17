@@ -40,7 +40,7 @@ const ChatPage = () => {
   };
 
   return (
-    <div className="grid grid-cols-custom h-[calc(100vh-64px)] w-50">
+    <div className="grid grid-cols-2 h-[calc(100vh-64px)] w-50">
       <MainContainer>
         <ChatContainer>
           <MessageList
@@ -56,8 +56,8 @@ const ChatPage = () => {
           <MessageInput  placeholder="Type message here" onSend={handleSend} />
         </ChatContainer>
       </MainContainer>
-      <div>
-      </div>
+    <div>
+    </div>
     </div>
   );
 }
