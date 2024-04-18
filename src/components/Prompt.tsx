@@ -7,12 +7,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from "sonner"
 import { useProcessing } from '@/hooks/useIsProcessing';
 import ProcessingButton from '@/components/ProcessingButton';
+import { ZenithCommand } from '@/types/ZenithCommand';
 
 type Props = {
-  label: string;
+  command: ZenithCommand;
 }
 
-const Prompt = ({label}: Props) => {
+const Prompt = ({command}: Props) => {
   const [prompt, setPrompt] = useState('');
   const { isProcessing: isLoading, startProcessing: startLoading} = useProcessing(true);
 
@@ -22,23 +23,23 @@ const Prompt = ({label}: Props) => {
 
   const savingPrompt = async () => { 
     await new Promise(resolve => setTimeout(resolve, 1000));
-    localStorage.setItem(label, prompt);
-    toast.success(`${label} saved!`, {position: "top-left"});
+    localStorage.setItem(command.name, prompt);
+    toast.success(`${command.name} saved!`, {position: "top-left"});
   };
 
   useEffect(() => {
     startLoading(async () => {
-      const savedPrompt = localStorage.getItem(label);
+      const savedPrompt = localStorage.getItem(command.name);
       if (savedPrompt) {
         setPrompt(savedPrompt);
       };
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [label]);
+  }, [command]);
 
   return (
     <>
-      <Label htmlFor="message-2">{label}</Label>
+      <Label className="ml-2 text-md">{command.name}</Label>
       <Textarea
         placeholder={isLoading ? "Loading..." : "Type or paste your prompt here..."}
         className={'min-h-[500px]'}
@@ -46,7 +47,7 @@ const Prompt = ({label}: Props) => {
         value={prompt}
         disabled={isLoading}
       />
-      <ProcessingButton doProcessing={savingPrompt} buttonText="Save" disabled={isLoading} />
+      <ProcessingButton doProcessing={savingPrompt} buttonText="Send To API" disabled={isLoading} />
     </>
   )
 }

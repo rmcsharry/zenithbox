@@ -35,12 +35,12 @@ const Navbar = () => {
           ZenithBox IDE
         </a>
         <div className={getMenuClasses()}>
-          <Link href="/" className="mx-2 hover:text-gray-300">
+          {/* <Link href="/" className="mx-2 hover:text-gray-300">
             Home
           </Link>
           <Link href="/chat" className="mx-2 hover:text-gray-300">
             Chat
-          </Link>
+          </Link> */}
         </div>
 
         <div className="md:hidden flex items-center pr-4">

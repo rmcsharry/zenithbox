@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { use, useEffect, useState } from 'react'
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css'
 import {
   MainContainer,
@@ -12,16 +12,29 @@ import {
   MessageModel,
 } from "@chatscope/chat-ui-kit-react";
 
+const getInitialMessages = (): any[] => {
+  // The system message DEFINES the logic of our chatGPT
+  const initialPrompt = {
+    message: localStorage.getItem("Initial Prompt"),
+    sender: "system",
+    direction: "outgoing",
+  };
+
+  if (!initialPrompt.message) {
+    throw new Error("Initial prompt not found in local storage");
+  };
+
+  const confirmationPrompt = {
+    message: "Do you understand?",
+    sender: "user",
+    direction: "outgoing",
+  };
+
+  return [initialPrompt, confirmationPrompt];
+};
+
 const ChatPage = () => {
-  const [messages, setMessages] = useState<any[]>([
-    {
-      message: "Hello, I'm a chat AI!",
-      sentTime: "just now",
-      sender: "ChatGPT",
-      direction: "incoming",
-      position: "single",
-    }
-  ]);
+  const [messages, setMessages] = useState<any[]>(getInitialMessages());
   const [isTyping, setIsTyping] = useState(false);
 
   const handleSend = async (message: string) => {
@@ -33,13 +46,17 @@ const ChatPage = () => {
     };
 
     const newMessages = [...messages, newMessage];
+    console.log(newMessages, "newMessages");
 
     setMessages(newMessages);
     setIsTyping(true);
     await processMessageToChatGPT(newMessages);
   };
 
-
+  useEffect(() => { 
+    processMessageToChatGPT(messages);
+  }, []);
+  
   async function processMessageToChatGPT(chatMessages: any[]) {
     // Format messages for chatGPT API
     // API is expecting objects in format of { role: "user" or "assistant", "content": "message here"}
@@ -47,22 +64,24 @@ const ChatPage = () => {
   
     let apiMessages = chatMessages.map((messageObject: any) => {
       let role = "";
-      if (messageObject.sender === "ChatGPT") {
-        role = "assistant";
-      } else {
-        role = "user";
-      }
+      switch (messageObject.sender) {
+        case ("system"):
+          role = "system";
+          break;
+        case ("ChatGPT"):
+          role = "assistant";
+          break;
+        case ("user"):
+          role = "user";
+          break;
+        default:
+          role = "user";
+      };
+
       return { role: role, content: messageObject.message }
     });
   
-    const initialPrompt = {
-      content: localStorage.getItem("Initial Prompt"),
-      role: "system",
-    };
 
-    if (!initialPrompt.content) {
-      throw new Error("Initial prompt not found in local storage");
-    };
   
     // Get the request body set up with the model we plan to use
     // and the messages which we formatted above. We add a system message in the front to'
@@ -70,7 +89,6 @@ const ChatPage = () => {
     const apiRequestBody = {
       "model": "gpt-3.5-turbo",
       "messages": [
-        initialPrompt,  // The system message DEFINES the logic of our chatGPT
         ...apiMessages // The messages from our chat with ChatGPT
       ]
     };

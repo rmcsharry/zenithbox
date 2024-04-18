@@ -79,7 +79,7 @@ const config = {
     function({ addUtilities }: { addUtilities: any }) {
       const newUtilities = {
         '.grid-cols-2': {
-          gridTemplateColumns: '1fr 1fr',
+          gridTemplateColumns: '1fr 2fr',
         },
         '.grid-cols-3': {
           gridTemplateColumns: '1fr 2fr 1fr',
