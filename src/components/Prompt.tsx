@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from "sonner"
 import { useProcessing } from '@/hooks/useIsProcessing';
 import ProcessingButton from '@/components/ProcessingButton';
-import { ZenithCommand } from '@/types/ZenithCommand';
+import { ZenithCommand, ZenithCommandType } from '@/types/ZenithCommand';
 
 type Props = {
   command: ZenithCommand;
@@ -24,7 +24,7 @@ const Prompt = ({command}: Props) => {
   const savingPrompt = async () => { 
     await new Promise(resolve => setTimeout(resolve, 1000));
     localStorage.setItem(command.name, prompt);
-    toast.success(`${command.name} saved!`, {position: "top-left"});
+    toast.success(`${command.name} saved!`, {position: "top-right"});
   };
 
   useEffect(() => {
@@ -38,17 +38,22 @@ const Prompt = ({command}: Props) => {
   }, [command]);
 
   return (
-    <>
-      <Label className="ml-2 text-md">{command.name}</Label>
+    <div className="mx-2">
+      <Label className="text-md">{command.name}</Label>
       <Textarea
-        placeholder={isLoading ? "Loading..." : "Type or paste your prompt here..."}
-        className={'min-h-[500px]'}
+        placeholder={isLoading ? "Loading..." : "Type or paste your text here..."}
+        className={'min-h-[400px]'}
         onChange={handlePromptChange}
         value={prompt}
         disabled={isLoading}
       />
-      <ProcessingButton doProcessing={savingPrompt} buttonText="Send To API" disabled={isLoading} />
-    </>
+      <div className="flex gap-x-4 mt-4">
+        <ProcessingButton doProcessing={savingPrompt} buttonText="Save" disabled={isLoading} />
+        {command.type === ZenithCommandType.Directives &&
+          <ProcessingButton variant="destructive" doProcessing={savingPrompt} buttonText="Send To API" disabled={isLoading} />
+        }
+      </div>
+    </div>
   )
 }
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button } from '@/components/ui/button';
+import { Button, ButtonProps } from '@/components/ui/button';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { useProcessing } from '@/hooks/useIsProcessing';
 
@@ -7,9 +7,10 @@ type Props = {
   doProcessing: () => void;
   buttonText: string;
   disabled: boolean;
+  className?: string;
 }
 
-const ProcessingButton = ({doProcessing, buttonText, disabled}: Props) => {
+const ProcessingButton = ({className, variant, doProcessing, buttonText, disabled}: Props & ButtonProps) => {
   const { isProcessing, startProcessing } = useProcessing(false);
 
   const handleSave = () => {
@@ -19,7 +20,7 @@ const ProcessingButton = ({doProcessing, buttonText, disabled}: Props) => {
   };
 
   return (
-    <Button className="mt-4 w-full" onClick={handleSave} disabled={isProcessing || disabled}>
+    <Button className={`w-[140px] ${className}`} variant={variant} onClick={handleSave} disabled={isProcessing || disabled}>
       {isProcessing || disabled ? (
         <>
           <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
