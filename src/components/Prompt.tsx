@@ -23,7 +23,7 @@ const Prompt = ({label}: Props) => {
   const savingPrompt = async () => { 
     await new Promise(resolve => setTimeout(resolve, 1000));
     localStorage.setItem(label, prompt);
-    toast.success(`${label} saved!`, {position: "top-right"});
+    toast.success(`${label} saved!`, {position: "top-left"});
   };
 
   useEffect(() => {
