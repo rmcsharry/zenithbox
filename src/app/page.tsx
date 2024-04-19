@@ -19,7 +19,6 @@ export default function Home() {
         <CommandMenu onCommandSelected={handleCommand}/>
         <div className="mx-2">
           <Prompt command={command} />
-          <AlertDestructive className="mt-4" />
         </div>
         <div></div>
       </div>

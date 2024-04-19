@@ -9,6 +9,9 @@ import { useProcessing } from '@/hooks/useIsProcessing';
 import ProcessingButton from '@/components/ProcessingButton';
 import { ZenithCommand, ZenithCommandType } from '@/types/ZenithCommand';
 import sendToApi from '@/lib/sendToApi';
+import useErrorStore from '../../store/useErrorStore';
+import useBuildPrompts from '@/hooks/useBuildPrompts';
+import { AlertDestructive } from '@/components/AlertDestructive';
 
 type Props = {
   command: ZenithCommand;
@@ -16,7 +19,12 @@ type Props = {
 
 const Prompt = ({command}: Props) => {
   const [prompt, setPrompt] = useState('');
-  const { isProcessing: isLoading, startProcessing: startLoading} = useProcessing(true);
+  const { isProcessing: isLoading, startProcessing: startLoading } = useProcessing(true);
+  const [selectedDirective, setSelectedDirective] = useState<ZenithCommand | null>(null);
+  // const {error, setError} = useErrorStore((state: any) => state.error);
+  // const { errorMessage, clearError, setError } = useErrorStore();
+  const error = useErrorStore((state: any) => state.error);
+  const [prompts] = useBuildPrompts(selectedDirective);
 
   const handlePromptChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setPrompt(event.target.value);
@@ -43,6 +51,10 @@ const Prompt = ({command}: Props) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [command]);
 
+  const handleSendToApi = async (command: ZenithCommand) => { 
+    setSelectedDirective(command);
+  }
+
   return (
     <>
       <Label className="text-md">{command.name}</Label>
@@ -57,9 +69,10 @@ const Prompt = ({command}: Props) => {
       <div className="flex gap-x-4 mt-4">
         <ProcessingButton doProcessing={savingPrompt} buttonText="Save" disabled={isLoading} />
         {command.type === ZenithCommandType.Directives &&
-          <ProcessingButton variant="destructive" doProcessing={() => sendToApi(command)} buttonText="Send To API" disabled={isLoading} />
+          <ProcessingButton variant="destructive" doProcessing={() => handleSendToApi(command)} buttonText="Send To API" disabled={isLoading} />
         }
       </div>
+      {error && <AlertDestructive className="mt-4" />}
     </>
   )
 }
