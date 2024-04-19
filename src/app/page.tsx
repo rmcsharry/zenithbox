@@ -1,5 +1,6 @@
 "use client"
 
+import { AlertDestructive } from '@/components/AlertDestructive';
 import CommandMenu from '@/components/CommandMenu';
 import Prompt from '@/components/Prompt';
 import { ZenithCommand, ZenithCommandType, controlDocs } from '@/types/ZenithCommand';
@@ -16,8 +17,9 @@ export default function Home() {
     <main>
       <div className="grid grid-cols-2 h-[calc(100vh-64px)] w-full">
         <CommandMenu onCommandSelected={handleCommand}/>
-        <div>
-          <Prompt command={command}/>
+        <div className="mx-2">
+          <Prompt command={command} />
+          <AlertDestructive className="mt-4" />
         </div>
         <div></div>
       </div>

@@ -8,6 +8,7 @@ import { toast } from "sonner"
 import { useProcessing } from '@/hooks/useIsProcessing';
 import ProcessingButton from '@/components/ProcessingButton';
 import { ZenithCommand, ZenithCommandType } from '@/types/ZenithCommand';
+import sendToApi from '@/lib/sendToApi';
 
 type Props = {
   command: ZenithCommand;
@@ -43,7 +44,7 @@ const Prompt = ({command}: Props) => {
   }, [command]);
 
   return (
-    <div className="mx-2">
+    <>
       <Label className="text-md">{command.name}</Label>
       <Textarea
         placeholder={isLoading ? "Loading..." : "Type or paste your text here..."}
@@ -56,10 +57,10 @@ const Prompt = ({command}: Props) => {
       <div className="flex gap-x-4 mt-4">
         <ProcessingButton doProcessing={savingPrompt} buttonText="Save" disabled={isLoading} />
         {command.type === ZenithCommandType.Directives &&
-          <ProcessingButton variant="destructive" doProcessing={savingPrompt} buttonText="Send To API" disabled={isLoading} />
+          <ProcessingButton variant="destructive" doProcessing={() => sendToApi(command)} buttonText="Send To API" disabled={isLoading} />
         }
       </div>
-    </div>
+    </>
   )
 }
 
