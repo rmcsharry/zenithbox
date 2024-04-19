@@ -27,6 +27,11 @@ const Prompt = ({command}: Props) => {
     toast.success(`${command.name} saved!`, {position: "top-right"});
   };
 
+  const savePrompt = () => { 
+    localStorage.setItem(command.name, prompt);
+    toast.success(`${command.name} saved!`, {position: "top-right"});
+  }
+
   useEffect(() => {
     startLoading(async () => {
       const savedPrompt = localStorage.getItem(command.name);
@@ -46,6 +51,7 @@ const Prompt = ({command}: Props) => {
         onChange={handlePromptChange}
         value={prompt}
         disabled={isLoading}
+        onBlur={savePrompt}
       />
       <div className="flex gap-x-4 mt-4">
         <ProcessingButton doProcessing={savingPrompt} buttonText="Save" disabled={isLoading} />

@@ -34,7 +34,10 @@ const CommandMenu = ({ onCommandSelected }: Props) => {
       <CommandList className="max-h-[600px]">
         <CommandGroup heading="Control Docs">
           {controlDocs.map((doc, index) => (
-            <CommandItem key={index} onSelect={handleCommand(doc)}>
+            <CommandItem
+              key={index}
+              onSelect={handleCommand(doc)}
+              className={selected.name === doc.name ? 'bg-blue-50' : 'transparent'}>
               <span>{doc.name}</span>
             </CommandItem>
           ))}
@@ -42,7 +45,10 @@ const CommandMenu = ({ onCommandSelected }: Props) => {
         <CommandSeparator />
         <CommandGroup heading="Directives">
           {directives.map((directive, index) => (
-            <CommandItem key={index} onSelect={handleCommand(directive)}>
+            <CommandItem
+              key={index}
+              onSelect={handleCommand(directive)}
+              className={selected.name === directive.name ? 'bg-blue-50' : 'transparent'}>
               <GearIcon className="mr-2 h-4 w-4" />
               <span>{directive.name}</span>
             </CommandItem>
