@@ -7,11 +7,14 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from "sonner"
 import { useProcessing } from '@/hooks/useIsProcessing';
 import ProcessingButton from '@/components/ProcessingButton';
-import { ZenithCommand, ZenithCommandType } from '@/types/ZenithCommand';
+import { ZenithCommand, ZenithCommandType, controlDocs } from '@/types/ZenithCommand';
 import sendToApi from '@/lib/sendToApi';
 import useErrorStore from '../../store/useErrorStore';
 import useBuildPrompts from '@/hooks/useBuildPrompts';
 import { AlertDestructive } from '@/components/AlertDestructive';
+import SimpleCard from '@/components/SimpleCard';
+import { appendToLocalStorage } from '@/lib/utils';
+import { ChevronRightIcon } from '@radix-ui/react-icons';
 
 type Props = {
   command: ZenithCommand;
@@ -21,25 +24,26 @@ const Prompt = ({command}: Props) => {
   const [prompt, setPrompt] = useState('');
   const { isProcessing: isLoading, startProcessing: startLoading } = useProcessing(true);
   const [selectedDirective, setSelectedDirective] = useState<ZenithCommand | null>(null);
-  // const {error, setError} = useErrorStore((state: any) => state.error);
-  // const { errorMessage, clearError, setError } = useErrorStore();
+  const [aiMessage, setAiMessage] = useState<string>('');
   const error = useErrorStore((state: any) => state.error);
-  const [prompts] = useBuildPrompts(selectedDirective);
+  const prompts = useBuildPrompts(selectedDirective);
 
   const handlePromptChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setPrompt(event.target.value);
   };
 
-  const savingPrompt = async () => { 
+  const handleSave = async () => { 
     await new Promise(resolve => setTimeout(resolve, 1000));
+    setSelectedDirective(null); // this will trigger the useEffect in useBuildPrompts to clear old prompts
     localStorage.setItem(command.name, prompt);
     toast.success(`${command.name} saved!`, {position: "top-right"});
   };
 
-  const savePrompt = () => { 
-    localStorage.setItem(command.name, prompt);
-    toast.success(`${command.name} saved!`, {position: "top-right"});
-  }
+  const handleFinalize = async () => {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    appendToLocalStorage(controlDocs[3].name, aiMessage);
+    toast.success("Response added to FDD", { position: "top-right" });
+  };
 
   useEffect(() => {
     startLoading(async () => {
@@ -52,8 +56,27 @@ const Prompt = ({command}: Props) => {
   }, [command]);
 
   const handleSendToApi = async (command: ZenithCommand) => { 
+    setAiMessage('');
     setSelectedDirective(command);
+    await new Promise(resolve => setTimeout(resolve, 2500));
   }
+
+  useEffect(() => {
+    const sendPromptsToApi = async () => {
+      console.log("prompts are:", prompts)
+      console.log("sending to api")
+      if (prompts.length > 2) {
+        const apiResponse = await sendToApi(prompts);
+        setAiMessage(apiResponse?.choices[0].message.content);
+        setSelectedDirective(null);
+      };
+    }
+  
+    if (selectedDirective) {
+      sendPromptsToApi();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prompts]);
 
   return (
     <>
@@ -64,15 +87,33 @@ const Prompt = ({command}: Props) => {
         onChange={handlePromptChange}
         value={prompt}
         disabled={isLoading}
-        onBlur={savePrompt}
       />
       <div className="flex gap-x-4 mt-4">
-        <ProcessingButton doProcessing={savingPrompt} buttonText="Save" disabled={isLoading} />
+        <ProcessingButton doProcessing={handleSave} disabled={isLoading}>
+          Save
+        </ProcessingButton>
         {command.type === ZenithCommandType.Directives &&
-          <ProcessingButton variant="destructive" doProcessing={() => handleSendToApi(command)} buttonText="Send To API" disabled={isLoading} />
+          <>
+            <ProcessingButton variant="destructive" doProcessing={() => handleSendToApi(command)} disabled={error}>
+              Send To API
+            </ProcessingButton>
+            {aiMessage &&
+              <ProcessingButton doProcessing={handleFinalize} disabled={isLoading} variant="outline">
+                Finalize <ChevronRightIcon className="ml-2 h-4 w-4" />
+              </ProcessingButton>
+            }
+          </>
         }
       </div>
-      {error && <AlertDestructive className="mt-4" />}
+      {command.type === ZenithCommandType.Directives &&
+        <>
+          {error && <AlertDestructive className="mt-4" />}
+          {prompts.length > 2 && <SimpleCard>
+            {aiMessage}
+          </SimpleCard>
+          }
+        </>
+      }
     </>
   )
 }

@@ -4,13 +4,13 @@ import { ReloadIcon } from '@radix-ui/react-icons';
 import { useProcessing } from '@/hooks/useIsProcessing';
 
 type Props = {
-  doProcessing: () => void;
-  buttonText: string;
+  doProcessing: (payload?: any) => void;
+  children: React.ReactNode;
   disabled: boolean;
   className?: string;
 }
 
-const ProcessingButton = ({className, variant, doProcessing, buttonText, disabled}: Props & ButtonProps) => {
+const ProcessingButton = ({className, variant, doProcessing, children, disabled}: Props & ButtonProps) => {
   const { isProcessing, startProcessing } = useProcessing(false);
 
   const handleSave = () => {
@@ -27,7 +27,9 @@ const ProcessingButton = ({className, variant, doProcessing, buttonText, disable
           <p>Please wait...</p>
         </>
       ) : (
-        <p>{buttonText}</p>
+        <>
+          {children}
+        </>
       )}
     </Button>
   )

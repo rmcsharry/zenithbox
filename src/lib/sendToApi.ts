@@ -1,39 +1,25 @@
-import { ZenithCommand, controlDocs } from '@/types/ZenithCommand';
-import useErrorStore from '../../store/useErrorStore';
+import { Prompt } from '@/types/Prompt';
 
-const buildPrompt = (command: ZenithCommand, sender: string): {} => { 
-  const prompt = localStorage.getItem(command.name);
 
-  if (!prompt) {
-    throw new Error(`${command.name} not found in local storage`);
-  }
-
-  return {
-    message: prompt,
-    sender,
-    direction: "outgoing",
+const sendToApi = async (prompts: Prompt[]) => {
+  const apiRequestBody = {
+    "model": "gpt-3.5-turbo",
+    "messages": prompts,
   };
-}
 
-const getControlPrompts = (): any[] => {
-  // The system message DEFINES the logic of our chatGPT
-  const initialPrompt = buildPrompt(controlDocs[0], "system");
-  const controls = controlDocs.slice(1).map((doc) => buildPrompt(doc, "user"));
-  return [initialPrompt, controls]; 
+  const response = await fetch("https://api.openai.com/v1/chat/completions",
+    {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(apiRequestBody)
+    });
+
+  const data = await response.json();
+  console.log('response data is:', data);
+  return data;
 };
-
-
-const sendToApi = async (directive: ZenithCommand) => {
-  try {  
-    const controlPrompts = getControlPrompts();
-    const directivePrompt = buildPrompt(directive, "user");
-    console.log(controlPrompts, directivePrompt, "controlPrompts, directivePrompt")
-  } catch (error: any) {
-    useErrorStore.setState(error.message)
-
-    return [];
-  }
-  
-}
 
 export default sendToApi;

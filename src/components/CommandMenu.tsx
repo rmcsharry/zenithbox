@@ -37,7 +37,7 @@ const CommandMenu = ({ onCommandSelected }: Props) => {
             <CommandItem
               key={index}
               onSelect={handleCommand(doc)}
-              className={selected.name === doc.name ? 'bg-blue-50' : 'transparent'}>
+              className={selected.name === doc.name ? 'bg-blue-200' : 'transparent'}>
               <span>{doc.name}</span>
             </CommandItem>
           ))}
@@ -48,7 +48,7 @@ const CommandMenu = ({ onCommandSelected }: Props) => {
             <CommandItem
               key={index}
               onSelect={handleCommand(directive)}
-              className={selected.name === directive.name ? 'bg-blue-50' : 'transparent'}>
+              className={selected.name === directive.name ? 'bg-blue-200' : 'transparent'}>
               <GearIcon className="mr-2 h-4 w-4" />
               <span>{directive.name}</span>
             </CommandItem>
