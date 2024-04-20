@@ -40,12 +40,10 @@ const Prompt = ({command}: Props) => {
   useEffect(() => {
     startLoading(async () => {
       const savedPrompt = localStorage.getItem(command.name);
-      if (savedPrompt) {
-        setPrompt(savedPrompt);
-      };
+      setPrompt(savedPrompt || '');
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [command]);
+  }, [command.name]);
 
   const handleSendToApi = async (command: ZenithCommand) => { 
     setAiMessage('');

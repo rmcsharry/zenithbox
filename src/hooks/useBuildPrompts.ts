@@ -7,12 +7,12 @@ import { Prompt } from '@/types/Prompt';
 const buildPrompt = (command: ZenithCommand, role: string): Prompt => { 
   const prompt = localStorage.getItem(command.name);
 
-  if (!prompt) {
+  if (!prompt && command.isRequired) {
     throw new Error(`${command.name} is empty`);
   }
 
   return {
-    content: prompt,
+    content: prompt || "",
     role,
   };
 }
