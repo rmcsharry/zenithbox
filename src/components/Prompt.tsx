@@ -7,14 +7,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from "sonner"
 import { useProcessing } from '@/hooks/useIsProcessing';
 import ProcessingButton from '@/components/ProcessingButton';
-import { ZenithCommand, ZenithCommandType, controlDocs } from '@/types/ZenithCommand';
+import { ZenithCommand, ZenithCommandType } from '@/types/ZenithCommand';
 import sendToApi from '@/lib/sendToApi';
 import useErrorStore from '../../store/useErrorStore';
 import useBuildPrompts from '@/hooks/useBuildPrompts';
 import { AlertDestructive } from '@/components/AlertDestructive';
-import SimpleCard from '@/components/SimpleCard';
-import { appendToLocalStorage } from '@/lib/utils';
-import { ChevronRightIcon } from '@radix-ui/react-icons';
+import SimpleCard from '@/components/ResponseCard';
 
 type Props = {
   command: ZenithCommand;
@@ -37,12 +35,6 @@ const Prompt = ({command}: Props) => {
     setSelectedDirective(null); // this will trigger the useEffect in useBuildPrompts to clear old prompts
     localStorage.setItem(command.name, prompt);
     toast.success(`${command.name} saved!`, {position: "top-right"});
-  };
-
-  const handleFinalize = async () => {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    appendToLocalStorage(controlDocs[3].name, aiMessage);
-    toast.success("Response added to FDD", { position: "top-right" });
   };
 
   useEffect(() => {
@@ -80,7 +72,7 @@ const Prompt = ({command}: Props) => {
 
   return (
     <>
-      <Label className="text-md">{command.name}</Label>
+      <Label className="text-lg">{command.name}</Label>
       <Textarea
         placeholder={isLoading ? "Loading..." : "Type or paste your text here..."}
         className={'min-h-[400px]'}
@@ -97,22 +89,19 @@ const Prompt = ({command}: Props) => {
             <ProcessingButton variant="destructive" doProcessing={() => handleSendToApi(command)} disabled={error}>
               Send To API
             </ProcessingButton>
-            {aiMessage &&
-              <ProcessingButton doProcessing={handleFinalize} disabled={isLoading} variant="outline">
-                Finalize <ChevronRightIcon className="ml-2 h-4 w-4" />
-              </ProcessingButton>
-            }
           </>
         }
       </div>
       {command.type === ZenithCommandType.Directives &&
-        <>
-          {error && <AlertDestructive className="mt-4" />}
-          {prompts.length > 2 && <SimpleCard>
-            {aiMessage}
-          </SimpleCard>
+        <div className="mt-8">
+          {error && <AlertDestructive />}
+          {prompts.length > 2 &&
+            <>
+              <h3 className="text-lg font-semibold tracking-tight">Response</h3>
+              <SimpleCard aiMessage={aiMessage} />
+            </>
           }
-        </>
+        </div>
       }
     </>
   )

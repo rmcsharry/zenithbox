@@ -6,7 +6,7 @@ import { useProcessing } from '@/hooks/useIsProcessing';
 type Props = {
   doProcessing: (payload?: any) => void;
   children: React.ReactNode;
-  disabled: boolean;
+  disabled?: boolean;
   className?: string;
 }
 
