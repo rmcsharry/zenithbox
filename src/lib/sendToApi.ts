@@ -5,6 +5,7 @@ const sendToApi = async (prompts: Prompt[]) => {
   const apiRequestBody = {
     "model": "gpt-4-turbo",
     "messages": prompts,
+    "temperature": 0,
   };
 
   const response = await fetch("https://api.openai.com/v1/chat/completions",
