@@ -21,7 +21,6 @@ export const getControlDocs = (): ZenithCommand[] => {
 
   controlDocs.forEach(command => {
     const isRequired = localStorage.getItem(`${command.name}_isRequired`);
-    console.log(isRequired, "isRequired");
     if (isRequired) {
       command.isRequired = isRequired === 'true';
     };

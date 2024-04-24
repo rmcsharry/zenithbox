@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import {
   GearIcon,
 } from "@radix-ui/react-icons"
-
 import {
   Command,
   CommandGroup,
@@ -13,7 +12,6 @@ import {
 import { ZenithCommand, directives, getControlDocs } from '@/types/ZenithCommand';
 import { Checkbox } from '@/components/ui/checkbox';
 import { CheckedState } from '@radix-ui/react-checkbox';
-import { get } from 'http';
 
 
 type Props = {
@@ -22,7 +20,6 @@ type Props = {
 }
 
 const CommandMenu = ({ onCommandSelected, selected }: Props) => {
-  // const [selected, setSelected] = React.useState<ZenithCommand>(getControlDocs()[0]);
   const [commands, setCommands] = React.useState<ZenithCommand[]>([]);
 
   useEffect(() => {
@@ -31,7 +28,6 @@ const CommandMenu = ({ onCommandSelected, selected }: Props) => {
   }, []);
 
   const handleCommand = (command: ZenithCommand) => () => {
-    // setSelected(command);
     onCommandSelected(command);
   };
 
@@ -44,8 +40,7 @@ const CommandMenu = ({ onCommandSelected, selected }: Props) => {
       }
       return cmd;
     });
-  
-    // Update your state
+
     setCommands(newCommands);
   };
 

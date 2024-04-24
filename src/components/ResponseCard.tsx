@@ -8,7 +8,7 @@ import {
 import { ChevronRightIcon, ReloadIcon } from '@radix-ui/react-icons';
 import ProcessingButton from '@/components/ProcessingButton';
 import { appendToLocalStorage } from '@/lib/utils';
-import { controlDocs } from '@/types/ZenithCommand';
+import { getControlDocs } from '@/types/ZenithCommand';
 import { toast } from 'sonner';
 
 type Props = {
@@ -19,7 +19,7 @@ const ResponseCard = ({ aiMessage }: Props) => {
 
   const handleFinalize = async () => {
     await new Promise(resolve => setTimeout(resolve, 1000));
-    appendToLocalStorage(controlDocs[3].name, aiMessage);
+    appendToLocalStorage(getControlDocs()[3].name, aiMessage);
     toast.success("Response added to FDD", { position: "top-right" });
   };
 

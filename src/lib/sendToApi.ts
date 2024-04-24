@@ -2,8 +2,10 @@ import { Prompt } from '@/types/Prompt';
 
 
 const sendToApi = async (prompts: Prompt[]) => {
+  const model = localStorage.getItem("model") || "gpt-3.5-turbo";
+
   const apiRequestBody = {
-    "model": "gpt-4-turbo",
+    "model": model,
     "messages": prompts,
     "temperature": 0,
   };

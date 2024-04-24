@@ -1,8 +1,20 @@
 "use client"
 
+import ComboBox from '@/components/ComboBox';
 import Link from 'next/link';
 import React, { useEffect } from 'react'
 import { GiHamburgerMenu } from "react-icons/gi";
+
+const models = [
+  {
+    value: "gpt-3.5-turbo",
+    label: "Gpt-3.5 Turbo",
+  },
+  {
+    value: "gpt-4-turbo",
+    label: "Gpt-4 Turbo",
+  },
+];
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -29,7 +41,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-gray-800 text-white p4 sm:p-4 md:flex md:justify-between md:items-center">
+    <nav className="bg-primary text-white p4 sm:p-4 md:flex md:justify-between md:items-center">
       <div className="container mx-auto flex justify-between items-center">
         <a href="" className="text-2xl font-bold pl-4">
           ZenithBox IDE
@@ -41,6 +53,7 @@ const Navbar = () => {
           <Link href="/chat" className="mx-2 hover:text-gray-300">
             Chat
           </Link> */}
+          <ComboBox options={models} />
         </div>
 
         <div className="md:hidden flex items-center pr-4">
