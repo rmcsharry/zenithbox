@@ -27,6 +27,7 @@ const getControlPrompts = (): any[] => {
 const useBuildPrompts = (directive: ZenithCommand | null) => {
   const [prompts, setPrompts] = useState<Prompt[]>([]);
   const setError = useErrorStore((state: any) => state.setError);
+  const clearError = useErrorStore((state: any) => state.clearError);
 
   useEffect(() => {
     const buildPrompts = async () => {
@@ -44,7 +45,7 @@ const useBuildPrompts = (directive: ZenithCommand | null) => {
           setError(error.message)
           setPrompts([]);
           setTimeout(() => {
-            setError(null);
+            clearError();
           }, 3000);
       }
     }

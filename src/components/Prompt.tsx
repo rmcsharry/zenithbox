@@ -68,10 +68,13 @@ const Prompt = ({command}: Props) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prompts]);
 
+  const id = `promptinput-${command.name}`;
+
   return (
     <>
-      <Label className="text-lg">{command.name}</Label>
+      <Label htmlFor={id} className="text-lg">{command.name}</Label>
       <Textarea
+        id={id}
         placeholder={isLoading ? "Loading..." : "Type or paste your text here..."}
         className={'min-h-[400px]'}
         onChange={handlePromptChange}
