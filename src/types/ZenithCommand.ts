@@ -10,7 +10,7 @@ export type ZenithCommand = {
   isRequired: boolean;
 }
 
-export const controlDocs: ZenithCommand[] = [
+const controlDocs: ZenithCommand[] = [
   { type: ZenithCommandType.ControlDocs, name: "Initial Prompt", isRequired: true },
   { type: ZenithCommandType.ControlDocs, name: "Program Architecture", isRequired: true },
   { type: ZenithCommandType.ControlDocs, name: "Benchmark Outputs", isRequired: false},

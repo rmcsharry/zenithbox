@@ -1,4 +1,4 @@
-import { ZenithCommand, controlDocs } from '@/types/ZenithCommand';
+import { ZenithCommand, getControlDocs } from '@/types/ZenithCommand';
 import useErrorStore from '../../store/useErrorStore';
 import { useState, useEffect } from 'react';
 import { Prompt } from '@/types/Prompt';
@@ -19,8 +19,8 @@ const buildPrompt = (command: ZenithCommand, role: string): Prompt => {
 
 const getControlPrompts = (): any[] => {
   // The system message DEFINES the logic of our chatGPT
-  const initialPrompt = buildPrompt(controlDocs[0], "system");
-  const controls = controlDocs.slice(1).map((doc) => buildPrompt(doc, "user"));
+  const initialPrompt = buildPrompt(getControlDocs()[0], "system");
+  const controls = getControlDocs().slice(1).map((doc) => buildPrompt(doc, "user"));
   return [initialPrompt, ...controls]; 
 };
 

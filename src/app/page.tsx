@@ -3,11 +3,11 @@
 import { AlertDestructive } from '@/components/AlertDestructive';
 import CommandMenu from '@/components/CommandMenu';
 import Prompt from '@/components/Prompt';
-import { ZenithCommand, ZenithCommandType, controlDocs } from '@/types/ZenithCommand';
+import { ZenithCommand, getControlDocs } from '@/types/ZenithCommand';
 import { useState } from 'react';
 
 export default function Home() {
-  const [command, setCommand] = useState<ZenithCommand>(controlDocs[0]);
+  const [command, setCommand] = useState<ZenithCommand>(getControlDocs()[0]);
 
   const handleCommand = (command: ZenithCommand) => {
     setCommand(command);
@@ -16,7 +16,7 @@ export default function Home() {
   return (
     <main>
       <div className="grid grid-cols-2 h-[calc(100vh-64px)] w-full">
-        <CommandMenu onCommandSelected={handleCommand}/>
+        <CommandMenu onCommandSelected={handleCommand} selected={command} />
         <div className="mx-2">
           <Prompt command={command} />
         </div>

@@ -10,7 +10,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command"
-import { ZenithCommand, controlDocs, directives, getControlDocs } from '@/types/ZenithCommand';
+import { ZenithCommand, directives, getControlDocs } from '@/types/ZenithCommand';
 import { Checkbox } from '@/components/ui/checkbox';
 import { CheckedState } from '@radix-ui/react-checkbox';
 import { get } from 'http';
@@ -18,19 +18,20 @@ import { get } from 'http';
 
 type Props = {
   onCommandSelected: (command: ZenithCommand) => void;
+  selected: ZenithCommand;
 }
 
-const CommandMenu = ({ onCommandSelected }: Props) => {
-  const [selected, setSelected] = React.useState<ZenithCommand>(controlDocs[0]);
+const CommandMenu = ({ onCommandSelected, selected }: Props) => {
+  // const [selected, setSelected] = React.useState<ZenithCommand>(getControlDocs()[0]);
   const [commands, setCommands] = React.useState<ZenithCommand[]>([]);
 
   useEffect(() => {
-    onCommandSelected(selected);
     setCommands(getControlDocs());
+    onCommandSelected(selected);
   }, []);
 
   const handleCommand = (command: ZenithCommand) => () => {
-    setSelected(command);
+    // setSelected(command);
     onCommandSelected(command);
   };
 
