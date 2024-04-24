@@ -56,6 +56,7 @@ const CommandMenu = ({ onCommandSelected, selected }: Props) => {
                 <span>{command.name}</span>
               </CommandItem>
               <Checkbox 
+                disabled={command.isPrimary}
                 id={command.name} 
                 className="self-center ml-2" 
                 checked={command.isRequired} 

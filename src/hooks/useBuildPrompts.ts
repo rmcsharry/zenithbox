@@ -2,6 +2,7 @@ import { ZenithCommand, getControlDocs } from '@/types/ZenithCommand';
 import useErrorStore from '../../store/useErrorStore';
 import { useState, useEffect } from 'react';
 import { Prompt } from '@/types/Prompt';
+import { get } from 'http';
 
 
 const buildPrompt = (command: ZenithCommand, role: string): Prompt => { 
@@ -17,12 +18,19 @@ const buildPrompt = (command: ZenithCommand, role: string): Prompt => {
   };
 }
 
-const getControlPrompts = (): any[] => {
+const getPrimaryPrompts = (): any[] => {
   // The system message DEFINES the logic of our chatGPT
-  const initialPrompt = buildPrompt(getControlDocs()[0], "system");
-  const controls = getControlDocs().slice(1).map((doc) => buildPrompt(doc, "user"));
-  return [initialPrompt, ...controls]; 
+  const initialSystemPrompt = buildPrompt(getControlDocs()[0], "system");
+  const initialUserPrompt = buildPrompt(getControlDocs()[1], "user");
+  
+  return [initialSystemPrompt, initialUserPrompt]; 
 };
+
+const getControlPrompts = (): any[] => {
+  const controls = getControlDocs().slice(2).filter((cmd) => cmd.isRequired).map((doc) => buildPrompt(doc, "user"));
+  return [...controls]; 
+ }
+
 
 const useBuildPrompts = (directive: ZenithCommand | null) => {
   const [prompts, setPrompts] = useState<Prompt[]>([]);
@@ -37,10 +45,10 @@ const useBuildPrompts = (directive: ZenithCommand | null) => {
 
       try {
         console.log("building prompts")
-        const controlPrompts = getControlPrompts();
         const directivePrompt = buildPrompt(directive, "user");
-        console.log([...controlPrompts, directivePrompt], "controlPrompts, directivePrompt")
-        setPrompts([...controlPrompts, directivePrompt]);
+        const prompts = [...getPrimaryPrompts(), directivePrompt, ...getControlPrompts()]
+        console.log("prompts are:", prompts)
+        setPrompts(prompts);
       } catch (error: any) {
           setError(error.message)
           setPrompts([]);
