@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import React, { useState } from 'react'
@@ -8,25 +9,14 @@ type Props = {
 }
 
 const CustomPrompt = ({ customPrompt, setCustomPrompt }: Props) => {
-  const [prompt, setPrompt] = useState('');
-  const handlePromptChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+   const handlePromptChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCustomPrompt(event.target.value);
   };
   const id = "custom-prompt"
 
-  // const handleSend = async () => {
-  //   const customPrompt = () => {
-  //     const customPrompt = {
-  //       "role": "user",
-  //       "content": prompt
-  //     }
-  //     return customPrompt
-  //   }
-  //   const fullPrompts = [...prompts, customPrompt()];
-  //   console.log('full prompts are:', fullPrompts);
-  //   const apiResponse = await sendToApi([...prompts, customPrompt()])
-  //   setAiMessage(apiResponse?.choices[0].message.content);
-  // };
+  const handleSend = () => { 
+    setCustomPrompt('');
+  };
 
   return (
     <>
@@ -38,9 +28,9 @@ const CustomPrompt = ({ customPrompt, setCustomPrompt }: Props) => {
         onChange={handlePromptChange}
         value={customPrompt}
       />
-      {/* <Button className="mt-2" onClick={handleSend} disabled={!prompt}>
-        Send
-      </Button> */}
+      <Button className="mt-2" onClick={handleSend} disabled={!customPrompt}>
+        Clear
+      </Button>
     </>
   )
 }
