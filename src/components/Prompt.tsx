@@ -16,13 +16,15 @@ import SimpleCard from '@/components/ResponseCard';
 
 type Props = {
   command: ZenithCommand;
+  selectedDirective: ZenithCommand | null;
+  setSelectedDirective: (command: ZenithCommand | null) => void;
+  aiMessage: string;
+  setAiMessage: (message: string) => void;
 }
 
-const Prompt = ({command}: Props) => {
+const Prompt = ({command, selectedDirective, setSelectedDirective, aiMessage, setAiMessage}: Props) => {
   const [prompt, setPrompt] = useState('');
   const { isProcessing: isLoading, startProcessing: startLoading } = useProcessing(true);
-  const [selectedDirective, setSelectedDirective] = useState<ZenithCommand | null>(null);
-  const [aiMessage, setAiMessage] = useState<string>('');
   const error = useErrorStore((state: any) => state.error);
   const prompts = useBuildPrompts(selectedDirective);
 
@@ -45,11 +47,11 @@ const Prompt = ({command}: Props) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [command.name]);
 
-  const handleSendToApi = async (command: ZenithCommand) => { 
+  const handleSendToApi = async (command: ZenithCommand) => {
     setAiMessage('');
     setSelectedDirective(command);
     await new Promise(resolve => setTimeout(resolve, 2500));
-  }
+  };
 
   useEffect(() => {
     const sendPromptsToApi = async () => {
@@ -58,9 +60,9 @@ const Prompt = ({command}: Props) => {
       if (prompts.length > 2) {
         const apiResponse = await sendToApi(prompts);
         setAiMessage(apiResponse?.choices[0].message.content);
-        setSelectedDirective(null);
+        // setSelectedDirective(null);
       };
-    }
+    };
   
     if (selectedDirective) {
       sendPromptsToApi();
@@ -76,7 +78,7 @@ const Prompt = ({command}: Props) => {
       <Textarea
         id={id}
         placeholder={isLoading ? "Loading..." : "Type or paste your text here..."}
-        className={'min-h-[400px]'}
+        className={'min-h-[320px]'}
         onChange={handlePromptChange}
         value={prompt}
         disabled={isLoading}
@@ -96,7 +98,7 @@ const Prompt = ({command}: Props) => {
       {command.type === ZenithCommandType.Directives &&
         <div className="mt-8">
           {error && <AlertDestructive />}
-          {prompts.length > 2 &&
+          {selectedDirective &&
             <>
               <h3 className="text-lg font-semibold tracking-tight">Response</h3>
               <SimpleCard aiMessage={aiMessage} />

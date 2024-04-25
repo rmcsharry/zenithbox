@@ -11,21 +11,23 @@ export type ZenithCommand = {
   isPrimary?: boolean;
 }
 
-const controlDocs: ZenithCommand[] = [
-  { type: ZenithCommandType.ControlDocs, name: "Initial Prompt", isRequired: true, isPrimary: true},
-  { type: ZenithCommandType.ControlDocs, name: "Program Architecture", isRequired: true, isPrimary: true},
-  { type: ZenithCommandType.ControlDocs, name: "Benchmark Outputs", isRequired: false, isPrimary: false},
-  { type: ZenithCommandType.ControlDocs, name: "Finalized Data Structure", isRequired: false, isPrimary: false},
-];
-
 export const getControlDocs = (): ZenithCommand[] => {
 
-  controlDocs.forEach(command => {
-    const isRequired = localStorage.getItem(`${command.name}_isRequired`);
-    if (isRequired) {
-      command.isRequired = isRequired === 'true';
-    };
-  });
+  const controlDocs: ZenithCommand[] = [
+    { type: ZenithCommandType.ControlDocs, name: "Initial Prompt", isRequired: true, isPrimary: true},
+    { type: ZenithCommandType.ControlDocs, name: "Program Architecture", isRequired: true, isPrimary: true},
+    { type: ZenithCommandType.ControlDocs, name: "Benchmark Outputs", isRequired: false, isPrimary: false},
+    { type: ZenithCommandType.ControlDocs, name: "Finalized Data Structure", isRequired: false, isPrimary: false},
+  ];
+
+  if (typeof window !== undefined) {
+    controlDocs.forEach(command => {
+      const isRequired = localStorage.getItem(`${command.name}_isRequired`);
+      if (isRequired) {
+        command.isRequired = isRequired === 'true';
+      };
+    });
+  }
 
   return controlDocs;
  }

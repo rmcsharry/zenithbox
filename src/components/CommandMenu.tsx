@@ -45,7 +45,7 @@ const CommandMenu = ({ onCommandSelected, selected }: Props) => {
   };
 
   return (
-    <Command className="border h-[calc(100vh-64px)]">
+    <Command className="border h-[calc(55vh-64px)]">
       <CommandList className="max-h-[600px]">
         <CommandGroup heading="Control Docs">
           {commands.map((command, index) => (
