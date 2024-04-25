@@ -23,13 +23,16 @@ const ProcessingButton = ({className, variant, doProcessing, children, disabled}
     <Button className={`w-[140px] ${className}`} variant={variant} onClick={handleSave} disabled={isProcessing || disabled}>
       {isProcessing || disabled ? (
         <>
-          <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-          <p>Please wait...</p>
+          <ReloadIcon className="mr-2 h-3 w-3 animate-spin" />
+          Please wait...
         </>
       ) : (
-        <>
-          {children}
-        </>
+          <>
+            {/* these icons are a hack to ensure the button doesn't jump when switching processing state */}
+            <ReloadIcon className="h-3 w-3 text-transparent" />
+            {children}
+            <ReloadIcon className="h-3 w-3 text-transparent" />
+          </>
       )}
     </Button>
   )

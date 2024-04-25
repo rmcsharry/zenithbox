@@ -2,7 +2,6 @@ import { ZenithCommand, getControlDocs } from '@/types/ZenithCommand';
 import useErrorStore from '../../store/useErrorStore';
 import { useState, useEffect } from 'react';
 import { Prompt } from '@/types/Prompt';
-import { get } from 'http';
 
 
 const buildPrompt = (command: ZenithCommand, role: string): Prompt => { 
@@ -37,9 +36,12 @@ const useBuildPrompts = (directive: ZenithCommand | null) => {
   const setError = useErrorStore((state: any) => state.setError);
   const clearError = useErrorStore((state: any) => state.clearError);
 
+  console.log("directive is:", directive, "in useBuildPrompts");
+  
   useEffect(() => {
     const buildPrompts = async () => {
       if (!directive) {
+        setPrompts([]);
         return;
       };
 

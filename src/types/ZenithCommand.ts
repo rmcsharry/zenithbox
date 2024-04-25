@@ -15,7 +15,7 @@ export const getControlDocs = (): ZenithCommand[] => {
 
   const controlDocs: ZenithCommand[] = [
     { type: ZenithCommandType.ControlDocs, name: "Initial Prompt", isRequired: true, isPrimary: true},
-    { type: ZenithCommandType.ControlDocs, name: "Program Architecture", isRequired: true, isPrimary: true},
+    { type: ZenithCommandType.ControlDocs, name: "Program Architecture", isRequired: false, isPrimary: false},
     { type: ZenithCommandType.ControlDocs, name: "Benchmark Outputs", isRequired: false, isPrimary: false},
     { type: ZenithCommandType.ControlDocs, name: "Finalized Data Structure", isRequired: false, isPrimary: false},
   ];

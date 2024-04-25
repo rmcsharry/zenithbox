@@ -13,9 +13,10 @@ import { toast } from 'sonner';
 
 type Props = {
   aiMessage: string;
+  isProcessing: boolean;
 }
 
-const ResponseCard = ({ aiMessage }: Props) => {
+const ResponseCard = ({ aiMessage, isProcessing }: Props) => {
 
   const handleFinalize = async () => {
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -35,7 +36,8 @@ const ResponseCard = ({ aiMessage }: Props) => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        {aiMessage ? <div>{aiMessage}</div> : <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+        {isProcessing && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+        {aiMessage && <div>{aiMessage}</div>}
       </CardContent>
     </Card>
   )
