@@ -9,9 +9,10 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command"
-import { ZenithCommand, directives, getControlDocs } from '@/types/ZenithCommand';
+import { CommandOption, ZenithCommand, directives, getControlDocs } from '@/types/ZenithCommand';
 import { Checkbox } from '@/components/ui/checkbox';
 import { CheckedState } from '@radix-ui/react-checkbox';
+import SendingOptions from '@/components/SendingOptions';
 
 
 type Props = {
@@ -31,12 +32,12 @@ const CommandMenu = ({ onCommandSelected, selected }: Props) => {
     onCommandSelected(command);
   };
 
-  const handleIsRequired = (command: ZenithCommand, state: CheckedState) => {
-    localStorage.setItem(`${command.name}_isRequired`, state.toString());
+  const handleOptionChange = (value: CommandOption, command: ZenithCommand) => {
+    localStorage.setItem(`${command.name}_option`, value);
 
     const newCommands = commands.map((cmd) => {
       if (cmd.name === command.name) {
-        return { ...cmd, isRequired: state as boolean };
+        return { ...cmd, option: value as CommandOption};
       }
       return cmd;
     });
@@ -55,13 +56,9 @@ const CommandMenu = ({ onCommandSelected, selected }: Props) => {
                 className={`w-full ${selected.name === command.name ? 'bg-blue-200' : 'transparent'}`}>
                 <span>{command.name}</span>
               </CommandItem>
-              <Checkbox 
-                disabled={command.isPrimary}
-                id={command.name} 
-                className="self-center ml-2" 
-                checked={command.isRequired} 
-                onCheckedChange={(state) => handleIsRequired(command, state )} 
-              />
+              {index > 0 &&
+                <SendingOptions option={command.option} onOptionChange={(value: CommandOption) => handleOptionChange(value, command)} />
+              }
             </div>
           ))}
         </CommandGroup>

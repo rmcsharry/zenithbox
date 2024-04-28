@@ -15,7 +15,7 @@ export function AlertDestructive({ className }: Props) {
   const error = useErrorStore((state: any) => state.error);
 
   return (
-    <Alert variant="destructive" className={`${className}`}>
+    <Alert variant="destructive" className={`${className} mb-8`}>
       <ExclamationTriangleIcon className="h-4 w-4" />
       <AlertTitle>Error</AlertTitle>
       <AlertDescription>

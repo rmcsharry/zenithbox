@@ -12,7 +12,7 @@ import useErrorStore from '../../store/useErrorStore';
 
 type Props = {
   command: ZenithCommand;
-  setSelectedDirective: (command: ZenithCommand | null) => void;
+  setSelectedDirective: (command: ZenithCommand | undefined) => void;
 }
 
 const Prompt = ({command, setSelectedDirective}: Props) => {

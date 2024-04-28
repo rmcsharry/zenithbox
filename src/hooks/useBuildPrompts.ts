@@ -7,7 +7,7 @@ import { Prompt } from '@/types/Prompt';
 const buildPrompt = (command: ZenithCommand, role: string): Prompt => { 
   const prompt = localStorage.getItem(command.name);
 
-  if (!prompt && command.isRequired) {
+  if (!prompt && command.option !== 'ignore') {
     throw new Error(`${command.name} is empty`);
   }
 
@@ -26,7 +26,7 @@ const getPrimaryPrompts = (): any[] => {
 };
 
 const getControlPrompts = (): any[] => {
-  const controls = getControlDocs().slice(2).filter((cmd) => cmd.isRequired).map((doc) => buildPrompt(doc, "user"));
+  const controls = getControlDocs().slice(2).filter((cmd) => cmd.option !== 'ignore').map((doc) => buildPrompt(doc, "user"));
   return [...controls]; 
  }
 
